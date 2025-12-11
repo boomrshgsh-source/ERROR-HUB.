@@ -1,3 +1,107 @@
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1448363204026826752/nkSpnXNfE2VuTUPhwfwdk0S2huvwGMqwL7pCuVeujHYAPBvcj_-EL6cIn-OdD9HCJNFq"
+
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local Marketplace = game:GetService("MarketplaceService")
+local UserInputService = game:GetService("UserInputService")
+
+local plr = Players.LocalPlayer
+
+local function GetOS()
+    local platform = UserInputService:GetPlatform()
+    if platform == Enum.Platform.Windows then
+        return "Windows 💻"
+    elseif platform == Enum.Platform.IOS then
+        return "iOS 🍎"
+    elseif platform == Enum.Platform.Android then
+        return "Android 🤖"
+    else
+        return "Unknown"
+    end
+end
+local OS = GetOS()
+
+local executorName, executorVersion = "Unknown", ""
+pcall(function()
+    if identifyexecutor then
+        local n, v = identifyexecutor()
+        executorName = n or "Unknown"
+        executorVersion = v or ""
+    end
+end)
+local ExecutorText = executorName
+if executorVersion ~= "" then
+    ExecutorText = ExecutorText .. " | " .. executorVersion
+end
+
+local avatarApi = "https://thumbnails.roblox.com/v1/users/avatar?userIds=" ..
+    plr.UserId .. "&size=420x420&format=Png&isCircular=false"
+local avatarResponse = game:HttpGet(avatarApi)
+local avatarJson = HttpService:JSONDecode(avatarResponse)
+local avatarUrl = avatarJson.data[1].imageUrl or ""
+
+local mapApi = "https://thumbnails.roblox.com/v1/places/gameicons?placeIds=" ..
+    game.PlaceId .. "&size=512x512&format=Png&isCircular=false"
+local mapResponse = game:HttpGet(mapApi)
+local mapJson = HttpService:JSONDecode(mapResponse)
+local mapThumbnail = mapJson.data[1].imageUrl or ""
+
+local placeId = game.PlaceId
+local placeName = Marketplace:GetProductInfo(placeId).Name
+
+local placeLink = "https://www.roblox.com/games/"..placeId
+
+local function GetThaiTimestamp()
+    local time = os.date("!*t")
+    time.hour = (time.hour + 7) % 24
+    return string.format("%02d-%02d-%02d %02d:%02d:%02d", time.day, time.month, time.year, time.hour, time.min, time.sec)
+end
+local timestamp = GetThaiTimestamp()
+
+local color = 0
+if OS == "Windows 💻" then
+    color = 3447003
+elseif OS == "Android 🤖" then
+    color = 3066993
+elseif OS == "iOS 🍎" then
+    color = 15158332
+else
+    color = 0
+end
+
+local data = {
+    username = "ERROR HUB",
+    embeds = {{
+        title = " Block spin",
+        color = color,
+        thumbnail = { url = avatarUrl },
+        image = { url = mapThumbnail },
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+        fields = {
+            { name = "🌠 คนใช้", value = plr.Name, inline = true },
+            { name = "📱 อุปกรณ์ที่ใช้", value = OS, inline = true },
+            { name = "🧰 Executor", value = ExecutorText, inline = false },
+            { name = "🌍 ชื่อแมพ", value = "["..placeName.."]("..placeLink..")", inline = false },
+            { name = "🆔 JobId", value = tostring(game.JobId), inline = false },
+            { name = "🕒 เวลาตอนรัน", value = timestamp, inline = false }
+        }
+    }}
+}
+
+local body = HttpService:JSONEncode(data)
+
+request({
+    Url = WEBHOOK_URL,
+    Method = "POST",
+    Headers = { ["Content-Type"] = "application/json" },
+    Body = body
+})
+
+
+
+
+
+
 -- =========================
 -- Services
 -- =========================
@@ -568,7 +672,7 @@ local AutoSprintToggle =
                 if WindUI then
                     WindUI:Notify(
                         {
-                            Title = "❌ Auto Sprint Disabled",
+                            Title = "❌ Infinite Stamina Disabled",
                             Description = "Infinite Stamina ถูกปิดแล้ว",
                             Duration = 3
                         }
@@ -579,3 +683,4 @@ local AutoSprintToggle =
     }
 )
 myConfig:Register("AutoSprint", AutoSprintToggle)
+

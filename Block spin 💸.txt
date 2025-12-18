@@ -26,14 +26,8 @@ local Mouse = LocalPlayer:GetMouse()
 local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 local WindUI = nil
 pcall(
-    function()
-        Version = "1.6.53"
-        WindUI =
-            loadstring(
-            game:HttpGet("https://github.com/Footagesus/WindUI/releases/download/" .. Version .. "/main.lua")
-        )()
-    end
-)
+
+    local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 local Window
 if WindUI then
     Window =
@@ -2878,56 +2872,7 @@ local SnapSlider =
         end
     }
 )
-myConfig:Register("SnapHeight", SnapSlider)
-local Tab_player = Window:Tab({Title = "PLAYER:", Icon = "person-standing"})
-Tab_player:Section({Title = "PLAYER:"})
-local Input =
-    Tab_player:Input(
-    {
-        Title = "Player Name:",
-        Desc = "Player name troll",
-        Value = "",
-        InputIcon = "user",
-        Type = "Input",
-        Placeholder = "",
-        Callback = function(input)
-            SelectedPlayer = input
-        end
-    }
-)
-myConfig:Register("PlayerNameInput", Input)
-local StartButton =
-    Tab_player:Button(
-    {
-        Title = "Start",
-        Desc = "Hold to Start troll",
-        Locked = false,
-        Callback = function()
-            if not SelectedPlayer or SelectedPlayer == "" then
-                return
-            end
-            ToggleBring(SelectedPlayer)
-        end
-    }
-)
-myConfig:Register("StartButton", StartButton)
-local StopButton =
-    Tab_player:Button(
-    {
-        Title = "Stop",
-        Desc = "Hold to Stop troll",
-        Locked = false,
-        Callback = function()
-            if Active then
-                Active = false
-                if BringConnection then
-                    BringConnection:Disconnect()
-                end
-            end
-        end
-    }
-)
-myConfig:Register("StopButton", StopButton)
+
 local Folder = Instance.new("Folder", Workspace)
 local CorePart = Instance.new("Part", Folder)
 local Attachment1 = Instance.new("Attachment", CorePart)
@@ -3233,6 +3178,7 @@ ServerTab:Button({
         end
     end
 })
+
 
 
 
